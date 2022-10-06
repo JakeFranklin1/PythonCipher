@@ -1,0 +1,108 @@
+import random
+import string
+
+key = None
+num2words = {1: 'One', 2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five', \
+             6: 'Six', 7: 'Seven', 8: 'Eight', 9: 'Nine', 10: 'Ten', \
+            11: 'Eleven', 12: 'Twelve', 13: 'Thirteen', 14: 'Fourteen', \
+            15: 'Fifteen', 16: 'Sixteen', 17: 'Seventeen', 18: 'Eighteen', \
+            19: 'Nineteen', 20: 'Twenty', 30: 'Thirty', 40: 'Forty', \
+            50: 'Fifty', 60: 'Sixty', 70: 'Seventy', 80: 'Eighty', \
+            90: 'Ninety', 0: 'Zero'}
+alphabet = "abcdefghijklmnopqrstuvwxyz".upper()
+
+def main():
+    global key
+    print("Encryption Menu")
+    print("----------------")
+    print("|  1. Encrypt  |")
+    print("|  2. Decrypt  |")
+    print("|  3. New Key  |")
+    print("|  4.  Quit    |")
+    print("----------------")
+    if key == None:
+        key = newKey()
+        print("Your randomised key is: ->",key,"<- PLEASE KEEP THIS SAFE SOMEWHERE.")
+    userChoice = input("Please Choose From The Menu ")
+    if userChoice == "1":
+        # print(key)
+        encrypt(key)
+    elif userChoice == "2":
+        # print(key)
+        decrypt(key)
+    elif userChoice == "3":
+        key = newKey()
+        print("YOUR NEW KEY IS: ---->",key,"<----")
+        userReturn()
+    elif userChoice == "4":
+        print("Quitting Program")
+        quit()
+    else:
+        print("Error")
+        
+def encrypt(key):
+    global result
+    result = ""
+    message = input("Please type what you wish to encrypt: ")
+    text = message.translate(str.maketrans('', '',string.punctuation)).replace(" ", "")
+    for letter in text:
+        if letter.upper() in alphabet:
+            result += key[alphabet.find(letter.upper())]
+        else:
+            result += letter
+    print("YOUR ENCRYPTION RESULT IS: ----->",result,"<-----")
+    userReturn()
+    return result
+    
+def decrypt(key):
+    decrypted = ""
+    newOrOld = input("Would you like to decypt the last message, or a new one? Y/N ").upper()
+    if newOrOld == "Y":
+        for letter in result:
+            if letter.upper() in key:
+                decrypted += alphabet[key.find(letter.upper())]
+            else:
+                decrypted += letter
+        print("YOUR DECRYPTION RESULT IS: ----->",decrypted,"<-----")
+        userReturn()
+    elif newOrOld == "N":
+        oldKey = input("Please type the key you would like to use, leave blank for the most recent key. ").upper()
+        if oldKey == "":
+            newInput = input("What would you like to decrypt? ").upper()
+            for letter in newInput:
+                if letter.upper() in key:
+                    decrypted += alphabet[key.find(letter.upper())]
+                else:
+                    decrypted += letter
+            print("YOUR DECRYPTION RESULT IS: ----->",decrypted,"<-----")
+            userReturn()
+        elif oldKey != "":
+            newInput = input("What would you like to decrypt? ")
+            for letter in newInput:
+                if letter.upper() in oldKey:
+                    decrypted += alphabet[oldKey.find(letter.upper())]
+                else:
+                    decrypted += letter
+            print("YOUR DECRYPTION RESULT IS: ----->",decrypted,"<-----")
+            userReturn()
+        else:
+            print("Something has gone horrifically wrong.")
+            
+def userReturn():  
+    returnToMenu = input("Would you like to return to the Encryption Menu? Y/N: ").upper()
+    if returnToMenu == "Y":
+        main()
+    elif returnToMenu == "N":
+        print("Quitting program")
+        quit()
+    else:
+        print("INCORRECT INPUT, ANSWER MUST BE Y OR N")
+        userReturn()    
+    
+def newKey():
+    randomList = list(alphabet)
+    random.shuffle(randomList)
+    return ''.join(randomList)
+
+if __name__ == '__main__':
+    main()
